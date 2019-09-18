@@ -4,10 +4,10 @@ $partOfDay="Hägune aeg";
 if ($hourNow >=5 && $hourNow <9){
  $partOfDay = "Hommik";
 }
-if ($hourNow >=9 && $hourNow <16){
+elseif ($hourNow >=9 && $hourNow <16){
  $partOfDay = "Päev";
 }
-if ($hourNow >=16 && $hourNow <22){
+elseif ($hourNow >=16 && $hourNow <22){
  $partOfDay = "Õhtu";
 }
 else {
