@@ -1,8 +1,8 @@
 <?php
   require("functions_main.php");
-  require("../config_vp2019.php");
+  require("../../../../../config_vp2019.php");
   require("functions_user.php");
-  $database = "if19_punkel";
+  $database = "if19_rinde_vp";
   
   $notice = null;
   $name = null;
@@ -14,11 +14,6 @@
   $birthDay = null;
   $birthDate = null;
   $monthNamesET = ["jaanuar", "veebruar", "märts", "aprill", "mai", "juuni","juuli", "august", "september", "oktoober", "november", "detsember"];
-$txtcolor_select= ["must","kollan","roheline","sinine","valge"];
-$userPic = null;
-$txtcolor = null;
-$bgcolor = null;
-$description = null;
   
   //muutujad võimalike veateadetega
   $nameError = null;
@@ -31,31 +26,9 @@ $description = null;
   $emailError = null;
   $passwordError = null;
   $confirmpasswordError = null;
-$userPicError = null;
-$txtcolorError = null;
-$bgcolorError = null;
-$descriptionError = null;
   
   //kui on uue kasutaja loomise nuppu vajutatud
   if(isset($_POST["submitUserData"])){
-
- if(isset($_POST["description"]) and !empty($_POST["description"])){
-                $description = test_input($_POST["description"]);
-        } else {
-                $descriptionError = "Palun sisesta kirjeldus!";
-        }
- if(isset($_POST["bgcolor"]) and !empty($_POST["bgcolor"])){
-                $bgcolor = test_input($_POST["bgcolor"]);
-        } else {
-                $bgcolorError = "Palun vali tausta värvus!";
-        }
- if(isset($_POST["txtcolor"]) and !empty($_POST["txtcolor"])){
-                $txtcolor = test_input($_POST["txtcolor"]);
-        } else {
-                $txtcolorError = "Palun vali teksti värvus!";
-        }
-
-
 	//eesnimi
 	if(isset($_POST["firstName"]) and !empty($_POST["firstName"])){
 		$name = test_input($_POST["firstName"]);
@@ -112,7 +85,8 @@ $descriptionError = null;
 	} else {
 	  $emailError = "Palun sisesta e-postiaadress!";
 	}
-	//parool ja selle kaks korda sisestamine
+	  
+	  //parool ja selle kaks korda sisestamine
 	if (!isset($_POST["password"]) or empty($_POST["password"])){
 	  $passwordError = "Palun sisesta salasõna!";
 	} else {
@@ -143,11 +117,11 @@ $descriptionError = null;
 <html>
   <head>
     <meta charset="utf-8">
-	<title>Uue kasutaja loomine</title>
+	<title>Katselise veebi uue kasutaja loomine</title>
   </head>
   <body>
-    <h1>Loo endale kasutaja</h1>
-	<p>Suvaline leht.</p>
+    <h1>Loo endale kasutajakonto</h1>
+	<p>See leht on valminud TLÜ õppetöö raames ja ei oma mingisugust, mõtestatud või muul moel väärtuslikku sisu.</p>
 	<hr>
 	
 	<form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
@@ -156,9 +130,11 @@ $descriptionError = null;
       <label>Perekonnanimi:</label><br>
 	  <input name="surName" type="text" value="<?php echo $surname; ?>"><span><?php echo $surnameError; ?></span>
 	  <br>
+	  
 	  <label><input type="radio" name="gender" value="2" <?php if($gender == "2"){		echo " checked";} ?>>Naine</label>
 	  <label><input type="radio" name="gender" value="1" <?php if($gender == "1"){		echo " checked";} ?>>Mees</label><br>
 	  <span><?php echo $genderError; ?></span><br>
+	    
 	  <br>
 	  <label>Sünnipäev: </label>
 	  <?php
@@ -173,6 +149,7 @@ $descriptionError = null;
 		}
 		echo "\t </select>";
 	  ?>
+	  
 	  <label>Sünnikuu: </label>
 	  <?php
 	    echo '<select name="birthMonth">' ."\n";
@@ -201,27 +178,6 @@ $descriptionError = null;
 	  ?>
 	  <br>
 	  <span><?php echo $birthDateError ." " .$birthDayError ." " .$birthMonthError ." " .$birthYearError; ?></span>
-	  <label>Lisa pilt:</label><br>
-	  <input name="userPic" type="file" value="<?php echo $userPic; ?>"><span><?php echo $userPicError; ?></span><br>
- <label>Lisa kirjeldus:</label><br>
-          <textarea rows="5"  name="description" value="<?php echo $description; ?>"></textarea><span><?php echo $descriptionError; ?></span><br>
- <label>Vali taustavärv:</label><br>
-          <input name="bgcolor" type="text" value="<?php echo $bgcolor; ?>"><span><?php echo $bgcolorError; ?></span><br>
-<label>Vali tekstivärv:</label><br>
- <?php
-            echo '<select name="txtcolor">' ."\n";
-                echo  '<option value="" selected disabled>Värv</option>' ."\n";
-                for($i = 1; $i < 5; $i ++){
-                        echo '<option value="' .$i .'"';
-                        if($i == $txtcolor){
-                                echo " selected";
-                        }
-                echo ">" .$txtcolor_select[$i -1] ."</option> \n";
-                }
-                echo " </select> \n";
-          ?>
-
-
 	  
 	  <br>
 	  <label>E-mail (kasutajatunnus):</label><br>

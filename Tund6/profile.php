@@ -13,12 +13,8 @@
   $birthYear = null;
   $birthDay = null;
   $birthDate = null;
+  $picture = null;
   $monthNamesET = ["jaanuar", "veebruar", "märts", "aprill", "mai", "juuni","juuli", "august", "september", "oktoober", "november", "detsember"];
-$txtcolor_select= ["must","kollan","roheline","sinine","valge"];
-$userPic = null;
-$txtcolor = null;
-$bgcolor = null;
-$description = null;
   
   //muutujad võimalike veateadetega
   $nameError = null;
@@ -31,31 +27,10 @@ $description = null;
   $emailError = null;
   $passwordError = null;
   $confirmpasswordError = null;
-$userPicError = null;
-$txtcolorError = null;
-$bgcolorError = null;
-$descriptionError = null;
+  $pictureError = null;
   
   //kui on uue kasutaja loomise nuppu vajutatud
   if(isset($_POST["submitUserData"])){
-
- if(isset($_POST["description"]) and !empty($_POST["description"])){
-                $description = test_input($_POST["description"]);
-        } else {
-                $descriptionError = "Palun sisesta kirjeldus!";
-        }
- if(isset($_POST["bgcolor"]) and !empty($_POST["bgcolor"])){
-                $bgcolor = test_input($_POST["bgcolor"]);
-        } else {
-                $bgcolorError = "Palun vali tausta värvus!";
-        }
- if(isset($_POST["txtcolor"]) and !empty($_POST["txtcolor"])){
-                $txtcolor = test_input($_POST["txtcolor"]);
-        } else {
-                $txtcolorError = "Palun vali teksti värvus!";
-        }
-
-
 	//eesnimi
 	if(isset($_POST["firstName"]) and !empty($_POST["firstName"])){
 		$name = test_input($_POST["firstName"]);
@@ -128,6 +103,11 @@ $descriptionError = null;
 	    $confirmpasswordError = "Sisestatud salasõnad ei olnud ühesugused!";
 	  }
 	}
+
+	 if (!isset($_POST["picture"]) or empty($_POST["picture"])){
+          $pictureError = "Palun lisa pilt!";
+        }
+
 	
 	//kui kõik on olemas, korras, siis salvestame kasutaja
 	if(empty($nameError) and empty($surnameError) and empty($birthMonthError) and empty($birthYearError) and empty($birthDayError) and empty($birthDateError) and empty($genderError) and empty($emailError) and empty($passwordError) and empty($confirmpasswordError)){
@@ -201,28 +181,9 @@ $descriptionError = null;
 	  ?>
 	  <br>
 	  <span><?php echo $birthDateError ." " .$birthDayError ." " .$birthMonthError ." " .$birthYearError; ?></span>
+
 	  <label>Lisa pilt:</label><br>
-	  <input name="userPic" type="file" value="<?php echo $userPic; ?>"><span><?php echo $userPicError; ?></span><br>
- <label>Lisa kirjeldus:</label><br>
-          <textarea rows="5"  name="description" value="<?php echo $description; ?>"></textarea><span><?php echo $descriptionError; ?></span><br>
- <label>Vali taustavärv:</label><br>
-          <input name="bgcolor" type="text" value="<?php echo $bgcolor; ?>"><span><?php echo $bgcolorError; ?></span><br>
-<label>Vali tekstivärv:</label><br>
- <?php
-            echo '<select name="txtcolor">' ."\n";
-                echo  '<option value="" selected disabled>Värv</option>' ."\n";
-                for($i = 1; $i < 5; $i ++){
-                        echo '<option value="' .$i .'"';
-                        if($i == $txtcolor){
-                                echo " selected";
-                        }
-                echo ">" .$txtcolor_select[$i -1] ."</option> \n";
-                }
-                echo " </select> \n";
-          ?>
-
-
-	  
+	  <input name="picture" type="file" value="<?php echo $picture; ?>"><span><?php echo $pictureError; ?></span><br>
 	  <br>
 	  <label>E-mail (kasutajatunnus):</label><br>
 	  <input type="email" name="email" value="<?php echo $email; ?>"><span><?php echo $emailError; ?></span><br>

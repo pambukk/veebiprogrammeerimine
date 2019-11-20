@@ -1,11 +1,13 @@
 <?php
+
+//sessiooni kasutamise algatamine
 session_start();
+//var_dump($_SESSION);
 
 function signUp($name, $surname, $email, $gender, $birthDate, $password){
 	$notice = null;
 	$conn = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
-	$stmt = $conn->prepare("INSERT INTO users (firstname, lastname, birthdate, gender, email, password) VALUES(?,?,?,?,?,?)");
-	$stmt2 = $conn->prepare("INSERT into userprofiles (userid,description,bgcolor,txtcolor,picture) VALUES(?,?,?,?,?)");
+	$stmt = $conn->prepare("INSERT INTO user (firstname, lastname, birthdate, gender, email, password) VALUES(?,?,?,?,?,?)");
 	echo $conn->error;
 	
 	//tekitame parooli räsi (hash) ehk krüpteerime
@@ -19,16 +21,8 @@ function signUp($name, $surname, $email, $gender, $birthDate, $password){
 	} else {
 		$notice = "Kasutaja salvestamisel tekkis tehniline tõrge: " .$stmt->error;
 	}
-	$userid = mysqli_insert_id($conn);
-	$stmt2->bind_param("isssi", $userid, $description, $bgcolor, $txtcolor, $picture);
-	 if($stmt2->execute()){
-                $notice = "Kasutaja salvestamine õnnestus!";
-        } else {
-                $notice = "Kasutaja salvestamisel tekkis tehniline tõrge: " .$stmt->error;
-        }
 	
 	$stmt->close();
-	$stmt2->close();
 	$conn->close();
 	return $notice;
 }
@@ -47,34 +41,32 @@ function signUp($name, $surname, $email, $gender, $birthDate, $password){
 		if(password_verify($password, $passwordFromDb)){
 		  //kui salasõna klapib
 		  $stmt->close();
-		  $stmt = $conn->prepare("SELECT u.id, u.firstname, u.lastname, p.userid FROM users u LEFT JOIN userprofiles p  on u.id=p.userid WHERE u.email=?");
+		  $stmt = $conn->prepare("SELECT id, firstname, lastname FROM users WHERE email=?");
 		  echo $conn->error;
 		  $stmt->bind_param("s", $email);
-		  $stmt->bind_result($idFromDb, $firstnameFromDb, $lastnameFromDb, $useridFromDb);
+		  $stmt->bind_result($idFromDb, $firstnameFromDb, $lastnameFromDb);
 		  $stmt->execute();
 		  $stmt->fetch();
 		  $notice = "Sisse logis " .$firstnameFromDb ." " .$lastnameFromDb ."!";
 		  
-		  
-		  
 		  //salvestame kasutaja kohta loetud info sessioonimuutujatesse
 		  $_SESSION["userId"] = $idFromDb;
-		  $_SESSION["userFirstname"]= $firstnameFromDb;
-		  $_SESSION["userLastname"]= $lastnameFromDb;
-		  $_SESSION["userid"]= $useridFromDb;
-
-		  //enne sisselogitutele mõeldud lehtede jõudmist sulgeme andmebaasi ühendused
+		  $_SESSION["userFirstname"] = $firstnameFromDb;
+		  $_SESSION["userLastname"] = $lastnameFromDb;
+		  
+		  //enne sisselogitutele mõeldud lehtedele jõudmist sulgeme andmebaasi ühendused
 		  $stmt->close();
-		  $conn->close();
-			  //liigume soovitud lehele
-			  header("Location: home.php");
-			  //et siin rohkem midagi ei tehtaks
-	  exit();                 
+	      $conn->close();
+		  //liigume soovitud lehele
+		  header("Location: home.php");
+		  //et siin rohkem midagi ei tehtaks
+          exit();		  
+		  
 		} else {
 		  $notice = "Vale salasõna!";
 		}//kas password_verify
 	  } else {
-		$notice = "Sellist kasutajat (" .$email . ")(".$useridFromDb . ") ei leitud!";
+		$notice = "Sellist kasutajat (" .$email .") ei leitud!";
 		//kui sellise e-mailiga ei saanud vastet (fetch ei andnud midagi), siis pole sellist kasutajat
 	  }//kas fetch õnnestus
 	} else {

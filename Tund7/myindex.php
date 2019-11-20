@@ -2,7 +2,7 @@
   require("../config_vp2019.php");
   require("functions_main.php");
   require("functions_user.php");
-  include("userprofile.php");
+ // include("userprofile.php");
   $database = "if19_punkel";
   
   $userName = "Sisselogimata kasutaja";
