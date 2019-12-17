@@ -1,0 +1,46 @@
+Väljastab piltide thumbnailid koos omaniku nime ja hindega
+SELECT vpphotos.id, vpusers.firstname, vpusers.lastname, vpphotos.filename, vpphotos.alttext, AVG(vpphotoratings.rating) as AvgValue FROM vpphotos JOIN vpusers ON vpphotos.userid = vpusers.id LEFT JOIN vpphotoratings ON vpphotoratings.photoid = vpphotos.id WHERE vpphotos.privacy <= ? AND deleted IS NULL GROUP BY vpphotos.id DESC LIMIT ?, ?
+
+
+	<div class="thumbGallery">
+	 	<img src="" alt="" class="thumbs" data-fn="" data-id="">
+	 	 <p>Autorinimi</p> 
+	 	 <p id="score86">Hinne: 3.33</p> 
+	 </div> 
+	 
+	 
+	 
+	 CSS:
+	 
+	 
+.thumbGallery
+{
+	width: 100px;
+	height: 200px;
+	padding: 5px;
+	float: left;
+	margin-right: 5px;
+}
+
+.thumbGallery p
+{
+	height: 40px;
+}
+
+.thumbs
+{
+    border-radius: 5px;
+    cursor: pointer;
+	opacity: 0.7;
+	transform-origin: 50% 50%;
+    transition: 0.3s;
+	filter: blur(1px);
+}
+
+.thumbs:hover
+{	
+	opacity: 1;
+	filter: none;
+	transform: scale(1.05);
+	/*transform: translate(0px,-3px);*/
+}
