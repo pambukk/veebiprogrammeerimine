@@ -2,7 +2,9 @@
   require("../config_vp2019.php");
   require("functions_main.php");
   require("functions_user.php");
-  require("../Tund8/functions_pic.php");
+  require("functions_pic.php");
+  //require("classes/Test.class.php");
+  require("Picupload.class.php");
   $database = "if19_punkel";
   
   //kui pole sisseloginud
@@ -19,8 +21,19 @@
 	  exit();
   }
   
+  //$myTest = new Test(123);
+  //echo " Teada: " .$myTest->knownNumber;
+  //echo " Teadmata: " .$myTest->secretNumber;
+  //$myTest->addNumbers();
+  //$myTest->multiplyNumbers();
+  //unset($myTest);
+  //echo " Teada: " .$myTest->knownNumber;
+  
   $userName = $_SESSION["userFirstname"] ." " .$_SESSION["userLastname"];
   
+$newsTitle = "";
+$news = "";
+  $expiredate = date("Y-m-d");
   $notice = null;
   //var_dump($_POST);
   //var_dump($_FILES);
@@ -67,27 +80,15 @@
 			echo "Sorry, your file was not uploaded.";
 		// if everything is ok, try to upload file
 		} else {
-			//muudan pildi suurust
-			//loon "pildiobjekti" - image
-			$myTempImage = makeImage($_FILES["fileToUpload"]["tmp_name"], $imageFileType);
-			//teeme kindlaks pildi suuruse
-			$picW = imagesx($myTempImage);
-			$picH = imagesy($myTempImage);
-			//kui pilt ületab max väärtuse, siis muudamegi suurust
-			if($picW > $maxPicW or $picH > $maxPicH){
-				if($picW / $maxPicW > $picH / $maxPicH){
-					$picSizeRatio = $picW / $maxPicW;
-				} else {
-					$picSizeRatio = $picH / $maxPicH;
-				}
-				$myNewImage = setPicSize($myTempImage, $picSizeRatio);
-				//salvestame vähendatud kujutise faili
-				$notice = saveImage($myNewImage, $pic_upload_dir_w600 .$fileName, $imageFileType);
-				
-				imagedestroy($myTempImage);
-				imagedestroy($myNewImage);
-			}//kui on liiga suur
 			
+			//kasutan klassi
+			$myPic = new Picupload($_FILES["fileToUpload"]["tmp_name"], $imageFileType);
+			//muudan pildi suurust
+			$myPic->resizeImage($maxPicW, $maxPicH);
+			//lisan vesimärgi
+			$myPic->addWatermark("vp_pics/vp_logo_w100_overlay.png");
+			//salvestame vähendatud kujutise faili
+			$notice = $myPic->saveImage($pic_upload_dir_w600 .$fileName);unset($myPic);			
 			
 			//kopeerime originaalfaili
 			if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
@@ -95,6 +96,9 @@
 			} else {
 				echo "Sorry, there was an error uploading your file.";
 			}
+			
+			//salvestan info andmebaasi
+			$notice .= addPicData($fileName, test_input($_POST["altText"]), $_POST["newsEditor"], $_POST["newsTitle"]);
 		}
 	
 	}//kas vajutati nuppu
@@ -115,7 +119,28 @@
 	  <label>Vali pilt</label><br>
 	  <input type="file" name="fileToUpload" id="fileToUpload">
 	  <br>
-	  <input name="submitPic" type="submit" value="Lae pilt üles"><span><?php echo $notice; ?></span>
+	  <label>Alt tekst: </label><input type="text" name="altText">
+	  <br>
+	  <label>Privaatsus</label>
+	  <br>
+	  <input type="radio" name="privacy" value="1"><label>Avalik</label>&nbsp;
+	  <input type="radio" name="privacy" value="2"><label>Sisseloginud kasutajatele</label>&nbsp;
+	  <input type="radio" name="privacy" value="3" checked><label>Isiklik</label>
+<br>
+                <label>Uudise pealkiri:</label><br>
+
+<input type="text" name="newsTitle" id="newsTitle" style="width: 100%;" value="<?php echo $newsTitle; ?>"><br>
+                <label>Uudise sisu:</label><br>
+                <textarea name="newsEditor" id="newsEditor"><?php echo $news; ?></textarea>
+                <br>
+                <label>Uudis nähtav kuni (kaasaarvatud)</label>
+                <input type="date" name="expiredate" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" value="<?php echo $expiredate; ?>">
+
+
+
+
+      <br>
+	  <input name="submitPic" type="submit" value="Salvesta uudis"><span><?php echo $notice; ?></span>
 	</form>
 	<hr>
 	  
