@@ -1,0 +1,79 @@
+
+body{
+    margin:0;
+    padding:0;
+    font-size: 18px;
+    background:rgb(20, 87, 46);
+  }
+  .suur_kast{
+    position:relative;
+    height: 100%auto;
+  }
+  #kella_kast {
+    position:absolute;
+  }
+  #kell_paev {
+    margin:20px auto;
+    color: rgb(50, 154, 202);
+    text-align: center;
+  }
+  #kell_kuu_aasta {
+    margin:20px auto;
+    color: rgb(188, 218, 81);
+    text-align: center;
+  }
+  #kella_aeg {
+    margin:20px auto;
+    color: rgb(194, 15, 69);
+    text-align: center;
+  }
+  @media screen and (max-width:800px){
+    #kell_paev, #kella_aeg {
+      font-size: 3em;
+    }
+    .suur_kast{
+      height: 600px;
+    }
+    .kella_kast {
+      position:relative;
+      top:inherit;
+      left:inherit;
+      transform: translate(0%,20%);
+    }
+    #kella_aeg{
+      min-width: inherit;
+      margin-top: 20px;
+    }
+  }
+
+
+.nupp{
+    width: 100vw;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    margin: 5px;
+}
+input[type="button"]{
+    background-color: green;
+    border: 1px solid green;
+    border-radius: 10px;
+    color: white;
+    padding: 10px;
+    height: 37px;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+input[type="button"]:hover{
+    border-radius: 10px;
+    color: lightgrey;
+    background-color: rgb(133, 207, 14);    
+    border: 1px solid green;
+}
+#nimi {
+    position:absolute;
+    bottom:0;
+    left:0;
+  }
