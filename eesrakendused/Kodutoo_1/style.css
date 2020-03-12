@@ -27,8 +27,8 @@ body{
     color: rgb(194, 15, 69);
     text-align: center;
   }
-  @media screen and (max-width:800px){
-    #kell_paev, #kella_aeg {
+  @media screen and (max-width:auto){
+    #kell_paev, #kella_aeg, #kell_kuu_aasta {
       font-size: 3em;
     }
     .suur_kast{
@@ -44,8 +44,19 @@ body{
       min-width: inherit;
       margin-top: 20px;
     }
+    #kell_kuu_aasta{
+    min-width: inherit;
+      margin-top: 20px;
+    #kell_paev{
+      min-width: inherit;
+      margin-top: 20px;
+    }
+    #kell_kuu_aasta{
+    min-width: inherit;
+      margin-top: 20px;
+    }    
   }
-
+}
 
 .nupp{
     width: 100vw;
